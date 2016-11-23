@@ -65,7 +65,7 @@
     
     <target name="run-test-Jenkins" depends="compile">
     	<taskdef resource="testngtasks" classpath="${lib.dir}/testng.jar"/>
-    	<testng outputDir="${env.WORKSPACE}/${env.BUILD_NUMBER}" classpathref="classes" delegateCommandSystemProperties="true"
+    	<testng outputDir="${env.WORKSPACE}/test-results/${env.BUILD_NUMBER}" classpathref="classes" delegateCommandSystemProperties="true"
     	haltonfailure="false" useDefaultListeners="false" listeners="org.uncommons.reportng.HTMLReporter,org.testng.reporters.XMLReporter,org.testng.reporters.FailedReporter">
             <xmlfileset dir="${basedir}" includes="${testng.suite.file}"/>
             <jvmarg value="-ea" />
