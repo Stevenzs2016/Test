@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="my-webdriver" configfailurepolicy="continue">
+	
+	<test name="MyTest" preserve-order="true">
+		<classes>
+			<class name="com.helloworld.HelloWorld"></class>
+		</classes>
+	</test>
+</suite>

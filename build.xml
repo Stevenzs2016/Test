@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="regression" name="automation test" xmlns:ivy="antlib:org.apache.ivy.ant">
+	<property name="bin.dir" value="${basedir}/bin" />
+	<property name="lib.dir" value="${basedir}/lib" />
+	<property name="src.dir" value="${basedir}/src" />
+	<property name="testng.results.dir" value="${basedir}\test-results"/>
+	<property name="testng.file" value="${basedir}/testng.xml"/>
+	<property name="Targetbrowser" value="C:/Program Files/Mozilla Firefox/firefox.exe" />
+	<property file="build.properties" />
+	<property environment="env"/>
+	
+	<tstamp>
+		<format property="run.time" pattern="dd_MMM_yyyy_hh_mm_aa" />
+	</tstamp>
+	
+		<property name="ivy.install.version" value="2.4.0" />
+		<property name="ivy.jar.dir" value="${ant.library.dir}" />
+		<property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar" />
+		<property name="build.dir" value="build" />
+		<property name="src.dir" value="src" />
+	
+	<path id="classes">
+			<pathelement location="${src.dir}" />
+			<pathelement location="${bin.dir}" />
+			<pathelement location="." />
+	        <fileset dir="${lib.dir}">
+	        	<include name="*.jar" />
+	        	<include name="**/*.jar" />
+	        </fileset>
+	</path>
+	
+	<!-- ================================= 
+	          target: resolve              
+	================================= -->
+	
+	<!-- Clean -->
+	<target name="clean">
+        <delete dir="${bin.dir}"/>
+    </target>
+	
+	<!-- Compile -->
+	<target name="compile" depends="clean">
+		<mkdir dir="${bin.dir}" />
+		<javac srcdir="${src.dir}" destdir="${bin.dir}" classpathref="classes" includeantruntime="off" debug="on" debuglevel="lines,vars,source" />
+	</target>
+  
+  	<!--  Run Test  -->
+    <target name="regression" depends="compile">
+    	<taskdef resource="testngtasks" classpath="${lib.dir}/testng.jar"/>
+    	<testng outputDir="${testng.results.dir}/${run.time}" classpathref="classes" delegateCommandSystemProperties="true"
+    	haltonfailure="false" useDefaultListeners="false" listeners="org.uncommons.reportng.HTMLReporter,org.testng.reporters.XMLReporter,org.testng.reporters.FailedReporter">
+            <xmlfileset dir="${basedir}" includes="${testng.suite.file}"/>
+            <jvmarg value="-ea" />
+            <sysproperty key="org.uncommons.reportng.title" value="Automation Test Report" />
+    		<sysproperty key="org.uncommons.reportng.escape-output" value="false" />
+			<!--<sysproperty key="org.uncommons.reportng.failures-only" value="false" /> -->
+			<sysproperty key="outputDir" value="${testng.results.dir}/${run.time}" />
+			<sysproperty key="testng.results.dir" value="${testng.results.dir}/${run.time}/html" />
+			<sysproperty key="json.report.dir" value="${testng.results.dir}/${run.time}/json" />
+			<sysproperty key="log4j.configurationFile" value="${lib.dir}/log4j2.xml" />
+    		<sysproperty key="rerun" value="${rerun}" />
+        </testng>
+        <antcall target="openReport"></antcall>
+    </target>
+    
+    <target name="run-test-Jenkins" depends="compile">
+    	<taskdef resource="testngtasks" classpath="${lib.dir}/testng.jar"/>
+    	<testng outputDir="${test.results.dir}/${buildid}" classpathref="classes" delegateCommandSystemProperties="true"
+    	haltonfailure="false" useDefaultListeners="false" listeners="org.uncommons.reportng.HTMLReporter,org.testng.reporters.XMLReporter,org.testng.reporters.FailedReporter,com.zs.util.FailTestScreenshotListener,com.zs.util.RetryListener">
+            <xmlfileset dir="${basedir}" includes="${testng.suite.file}"/>
+            <jvmarg value="-ea" />
+            <sysproperty key="org.uncommons.reportng.title" value="Automation Test Report" />
+    		<sysproperty key="org.uncommons.reportng.escape-output" value="false" />
+			<!--<sysproperty key="org.uncommons.reportng.failures-only" value="false" /> -->
+			<sysproperty key="buildid" value="${buildid}" />
+			<sysproperty key="joburl" value="${joburl}" />
+			<sysproperty key="report.path"
+					value="../ws/${test.results.dir}/${buildid}/html/index.html" />
+			<sysproperty key="json.report.dir" value="${test.results.dir}/${buildid}/json" />
+			<sysproperty key="log4j.configurationFile" value="${lib.dir}/log4j2.xml" />
+    		<sysproperty key="rerun" value="${rerun}" />
+    		<sysproperty key="Jenkins_workspace" value="${env.WORKSPACE}" />
+    		<sysproperty key="Jenkins_Job_Name" value="${env.JOB_NAME}" />
+			<sysproperty key="Jenkins_Build_Number" value="${env.BUILD_NUMBER}" />
+			<sysproperty key="Jenkins_Home" value="${env.JENKINS_HOME}" />
+        </testng>
+        <!--<antcall target="openReport"></antcall>-->
+    </target>
+    
+    <target name="openReport">
+		<exec executable="${Targetbrowser}" spawn="yes">
+			<arg line="'${testng.results.dir}\${run.time}\html\index.html'" />
+		</exec>
+	</target>
+</project>
+    
