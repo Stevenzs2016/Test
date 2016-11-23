@@ -1,10 +1,12 @@
 package com.helloworld;
 
+import org.testng.annotations.Test;
+
 public class HelloWorld {
 	//Hello World
-	public static void main (String[] args){
-		
-		System.out.println("Hello World");
-	}
-
+	
+		@Test
+		public void helloWorld(){
+			System.out.println("Hello World");
+		}
 }
