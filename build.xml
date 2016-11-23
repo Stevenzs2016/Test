@@ -66,7 +66,7 @@
     <target name="run-test-Jenkins" depends="compile">
     	<taskdef resource="testngtasks" classpath="${lib.dir}/testng.jar"/>
     	<testng outputDir="${test.results.dir}/${buildid}" classpathref="classes" delegateCommandSystemProperties="true"
-    	haltonfailure="false" useDefaultListeners="false" listeners="org.uncommons.reportng.HTMLReporter,org.testng.reporters.XMLReporter,org.testng.reporters.FailedReporter,com.zs.util.FailTestScreenshotListener,com.zs.util.RetryListener">
+    	haltonfailure="false" useDefaultListeners="false" listeners="org.uncommons.reportng.HTMLReporter,org.testng.reporters.XMLReporter,org.testng.reporters.FailedReporter">
             <xmlfileset dir="${basedir}" includes="${testng.suite.file}"/>
             <jvmarg value="-ea" />
             <sysproperty key="org.uncommons.reportng.title" value="Automation Test Report" />
