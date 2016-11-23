@@ -65,18 +65,18 @@
     
     <target name="run-test-Jenkins" depends="compile">
     	<taskdef resource="testngtasks" classpath="${lib.dir}/testng.jar"/>
-    	<testng outputDir="${Jenkins_workspace}/${Jenkins_Build_Number}" classpathref="classes" delegateCommandSystemProperties="true"
+    	<testng outputDir="${env.WORKSPACE}/${env.BUILD_NUMBER}" classpathref="classes" delegateCommandSystemProperties="true"
     	haltonfailure="false" useDefaultListeners="false" listeners="org.uncommons.reportng.HTMLReporter,org.testng.reporters.XMLReporter,org.testng.reporters.FailedReporter">
             <xmlfileset dir="${basedir}" includes="${testng.suite.file}"/>
             <jvmarg value="-ea" />
             <sysproperty key="org.uncommons.reportng.title" value="Automation Test Report" />
     		<sysproperty key="org.uncommons.reportng.escape-output" value="false" />
 			<!--<sysproperty key="org.uncommons.reportng.failures-only" value="false" /> -->
-			<sysproperty key="buildid" value="${Jenkins_Build_Number}" />
+			<sysproperty key="buildid" value="${env.BUILD_NUMBER}" />
 			<sysproperty key="joburl" value="${joburl}" />
 			<sysproperty key="report.path"
-					value="../ws/${Jenkins_workspace}/${Jenkins_Build_Number}/html/index.html" />
-			<sysproperty key="json.report.dir" value="${Jenkins_workspace}/${Jenkins_Build_Number}/json" />
+					value="../ws/${env.WORKSPACE}/${env.BUILD_NUMBER}/html/index.html" />
+			<sysproperty key="json.report.dir" value="${env.WORKSPACE}/${env.BUILD_NUMBER}/json" />
 			<sysproperty key="log4j.configurationFile" value="${lib.dir}/log4j2.xml" />
     		<sysproperty key="rerun" value="${rerun}" />
     		<sysproperty key="Jenkins_workspace" value="${env.WORKSPACE}" />
